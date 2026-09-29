@@ -11,7 +11,7 @@
 ' ==========================================================================
 Option Explicit
 Const CARPETA As String = "C:\Taburete\"
-Const ALUMNO As String = "[nombre y apellidos]"   ' <-- pon aqui tu nombre
+Const ALUMNO As String = "Iván Roig Pérez"
 Const CFG As String = "ALT2_ALUMINIO"
 
 Dim swApp As Object

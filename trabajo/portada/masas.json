@@ -1,0 +1,191 @@
+{
+ "acero": {
+  "larguero_delantero": {
+   "cant": 2,
+   "material": "Acero S235",
+   "masa_g": 1400.1,
+   "total_g": 2800.2
+  },
+  "pata_trasera": {
+   "cant": 2,
+   "material": "Acero S235",
+   "masa_g": 1298.5,
+   "total_g": 2597.0
+  },
+  "travesano_asidero": {
+   "cant": 1,
+   "material": "Acero S235",
+   "masa_g": 463.5,
+   "total_g": 463.5
+  },
+  "travesano_trasero": {
+   "cant": 1,
+   "material": "Acero S235",
+   "masa_g": 406.9,
+   "total_g": 406.9
+  },
+  "plataforma": {
+   "cant": 1,
+   "material": "Acero S235 (chapa 1,2 mm)",
+   "masa_g": 1306.3,
+   "total_g": 1306.3
+  },
+  "peldano": {
+   "cant": 1,
+   "material": "Acero S235 (chapa 1,2 mm)",
+   "masa_g": 1069.6,
+   "total_g": 1069.6
+  },
+  "biela_plataforma": {
+   "cant": 2,
+   "material": "Acero",
+   "masa_g": 103.2,
+   "total_g": 206.4
+  },
+  "tirante_peldano": {
+   "cant": 2,
+   "material": "Acero",
+   "masa_g": 89.6,
+   "total_g": 179.3
+  },
+  "pasador": {
+   "cant": 10,
+   "material": "Acero",
+   "masa_g": 17.8,
+   "total_g": 177.6
+  },
+  "taco": {
+   "cant": 4,
+   "material": "TPE",
+   "masa_g": 11.4,
+   "total_g": 45.8
+  },
+  "TOTAL_kg": 9.25
+ },
+ "aluminio": {
+  "larguero_delantero": {
+   "cant": 2,
+   "material": "Aluminio 6063-T5",
+   "masa_g": 481.6,
+   "total_g": 963.1
+  },
+  "pata_trasera": {
+   "cant": 2,
+   "material": "Aluminio 6063-T5",
+   "masa_g": 446.6,
+   "total_g": 893.2
+  },
+  "travesano_asidero": {
+   "cant": 1,
+   "material": "Aluminio 6063-T5",
+   "masa_g": 159.4,
+   "total_g": 159.4
+  },
+  "travesano_trasero": {
+   "cant": 1,
+   "material": "Aluminio 6063-T5",
+   "masa_g": 140.0,
+   "total_g": 140.0
+  },
+  "plataforma": {
+   "cant": 1,
+   "material": "PP + 30 % fibra de vidrio",
+   "masa_g": 457.4,
+   "total_g": 457.4
+  },
+  "peldano": {
+   "cant": 1,
+   "material": "PP + 30 % fibra de vidrio",
+   "masa_g": 373.9,
+   "total_g": 373.9
+  },
+  "biela_plataforma": {
+   "cant": 2,
+   "material": "Aluminio 6063-T5",
+   "masa_g": 35.5,
+   "total_g": 71.0
+  },
+  "tirante_peldano": {
+   "cant": 2,
+   "material": "Aluminio 6063-T5",
+   "masa_g": 30.8,
+   "total_g": 61.7
+  },
+  "pasador": {
+   "cant": 10,
+   "material": "Acero",
+   "masa_g": 17.8,
+   "total_g": 177.6
+  },
+  "taco": {
+   "cant": 4,
+   "material": "TPE",
+   "masa_g": 11.4,
+   "total_g": 45.8
+  },
+  "TOTAL_kg": 3.34
+ },
+ "madera": {
+  "larguero_delantero": {
+   "cant": 2,
+   "material": "Haya maciza",
+   "masa_g": 457.9,
+   "total_g": 915.9
+  },
+  "pata_trasera": {
+   "cant": 2,
+   "material": "Haya maciza",
+   "masa_g": 424.6,
+   "total_g": 849.3
+  },
+  "travesano_asidero": {
+   "cant": 1,
+   "material": "Haya maciza",
+   "masa_g": 118.1,
+   "total_g": 118.1
+  },
+  "travesano_trasero": {
+   "cant": 1,
+   "material": "Haya maciza",
+   "masa_g": 103.7,
+   "total_g": 103.7
+  },
+  "plataforma": {
+   "cant": 1,
+   "material": "Contrachapado de haya/abedul",
+   "masa_g": 1115.7,
+   "total_g": 1115.7
+  },
+  "peldano": {
+   "cant": 1,
+   "material": "Contrachapado de haya/abedul",
+   "masa_g": 876.8,
+   "total_g": 876.8
+  },
+  "biela_plataforma": {
+   "cant": 2,
+   "material": "Acero",
+   "masa_g": 103.2,
+   "total_g": 206.4
+  },
+  "tirante_peldano": {
+   "cant": 2,
+   "material": "Acero",
+   "masa_g": 89.6,
+   "total_g": 179.3
+  },
+  "pasador": {
+   "cant": 10,
+   "material": "Acero",
+   "masa_g": 17.8,
+   "total_g": 177.6
+  },
+  "taco": {
+   "cant": 4,
+   "material": "TPE",
+   "masa_g": 11.4,
+   "total_g": 45.8
+  },
+  "TOTAL_kg": 4.59
+ }
+}

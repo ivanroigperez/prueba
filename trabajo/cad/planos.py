@@ -35,7 +35,7 @@ class Hoja:
         a.text(x0+w/2,y0+25,titulo,ha="center",va="center",fontsize=10.5,fontweight="bold")
         for (xx,lab,val) in ((x0,"Escala",escala),(x0+60,"Plano nº",str(num)),(x0+120,"Fecha",datetime.date.today().strftime("%d/%m/%Y"))):
             a.text(xx+3,y0+17.5,lab,fontsize=6,va="center",color="#444"); a.text(xx+30,y0+13,val,fontsize=9,ha="center",va="center",fontweight="bold")
-        a.text(x0+3,y0+7,"Dibujado:",fontsize=6,va="center",color="#444"); a.text(x0+63,y0+7,"Sistema europeo (ISO-E)  ⊖⊙",fontsize=6.5,va="center")
+        a.text(x0+3,y0+7,"Dibujado:",fontsize=6,va="center",color="#444"); a.text(x0+17,y0+7,"Iván Roig Pérez",fontsize=6.5,va="center",fontweight="bold"); a.text(x0+63,y0+7,"Sistema europeo (ISO-E)  ⊖⊙",fontsize=6.5,va="center")
         a.text(x0+123,y0+7,"Cotas en mm",fontsize=6.5,va="center")
         s.a=a
     def dibujar(s,proy,ox,oy,esc,lw=0.7,flipx=False):
