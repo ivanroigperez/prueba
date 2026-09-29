@@ -1,0 +1,326 @@
+' ==========================================================================
+'  Macro SOLIDWORKS - Taburete-escalera plegable (Ingeniería Simultánea)
+'  Crea las 10 piezas en C:\Taburete\ con su árbol de operaciones y
+'  3 configuraciones (ALT1_ACERO, ALT2_ALUMINIO, ALT3_MADERA).
+'  Al final escribe C:\Taburete\masas_solidworks.csv con la masa de cada
+'  pieza en cada configuración.
+'  Unidades del API: metros.
+' ==========================================================================
+Option Explicit
+
+Const CARPETA As String = "C:\Taburete\"
+Const DB As String = "SOLIDWORKS Materials"
+
+Dim swApp As Object
+Dim Part As Object
+Dim informe As String
+Dim csv As String
+
+' ---------- utilidades ----------
+Function mm(v As Double) As Double
+    mm = v / 1000#
+End Function
+
+Sub Nota(t As String)
+    informe = informe & t & vbCrLf
+End Sub
+
+Function Plano(n As Integer) As Object
+    ' n = 1 Alzado (XY), 2 Planta (XZ), 3 Vista lateral (YZ). Independiente del idioma.
+    Dim f As Object, k As Integer
+    Set f = Part.FirstFeature
+    Do While Not f Is Nothing
+        If f.GetTypeName2 = "RefPlane" Then
+            k = k + 1
+            If k = n Then Set Plano = f: Exit Function
+        End If
+        Set f = f.GetNextFeature
+    Loop
+End Function
+
+Function UltimaOperacion() As Object
+    Set UltimaOperacion = Part.FeatureByPositionReverse(0)
+End Function
+
+Sub AbrirCroquis(nPlano As Integer)
+    Part.ClearSelection2 True
+    Plano(nPlano).Select2 False, 0
+    Part.SketchManager.InsertSketch True
+    Part.SketchManager.AddToDB = True
+End Sub
+
+Function CerrarCroquis(nombre As String) As Object
+    Dim s As Object
+    Part.SketchManager.AddToDB = False
+    Part.SketchManager.InsertSketch True
+    Set s = UltimaOperacion()
+    On Error Resume Next
+    s.Name = nombre
+    On Error GoTo 0
+    Part.ClearSelection2 True
+    s.Select2 False, 0
+    Set CerrarCroquis = s
+End Function
+
+Function Extruir(prof As Double, nombre As String, Optional plano_medio As Boolean = False) As Object
+    Dim f As Object, cond As Long
+    cond = 0: If plano_medio Then cond = 6
+    Set f = Part.FeatureManager.FeatureExtrusion3(True, False, False, cond, 0, mm(prof), 0, _
+        False, False, False, False, 0, 0, False, False, False, False, True, True, True, 0, 0, False)
+    If f Is Nothing Then
+        Nota "  ERROR al extruir " & nombre
+    Else
+        f.Name = nombre
+    End If
+    Set Extruir = f
+End Function
+
+Function CortarTodo(nombre As String) As Object
+    ' corte "por todo" en las dos direcciones
+    Dim f As Object
+    Set f = Part.FeatureManager.FeatureCut4(False, False, False, 1, 1, 0, 0, _
+        False, False, False, False, 0, 0, False, False, False, False, False, True, True, _
+        False, False, False, 0, 0, False, False)
+    If f Is Nothing Then
+        Nota "  ERROR en el corte " & nombre
+    Else
+        f.Name = nombre
+    End If
+    Set CortarTodo = f
+End Function
+
+Function CortarMedio(prof As Double, nombre As String) As Object
+    Dim f As Object
+    Set f = Part.FeatureManager.FeatureCut4(True, False, False, 6, 0, mm(prof), 0, _
+        False, False, False, False, 0, 0, False, False, False, False, False, True, True, _
+        False, False, False, 0, 0, False, False)
+    If f Is Nothing Then
+        Nota "  ERROR en el corte " & nombre
+    Else
+        f.Name = nombre
+    End If
+    Set CortarMedio = f
+End Function
+
+Sub Rect(cx As Double, cy As Double, w As Double, h As Double)
+    Part.SketchManager.CreateCenterRectangle mm(cx), mm(cy), 0, mm(cx + w / 2), mm(cy + h / 2), 0
+End Sub
+
+Sub Linea(x1 As Double, y1 As Double, x2 As Double, y2 As Double)
+    Part.SketchManager.CreateLine mm(x1), mm(y1), 0, mm(x2), mm(y2), 0
+End Sub
+
+Sub Circulo(cx As Double, cy As Double, r As Double)
+    Part.SketchManager.CreateCircleByRadius mm(cx), mm(cy), 0, mm(r)
+End Sub
+
+Function NuevaPieza() As Object
+    Dim plantilla As String
+    plantilla = swApp.GetUserPreferenceStringValue(8)   ' swDefaultTemplatePart
+    Set Part = swApp.NewDocument(plantilla, 0, 0, 0)
+    If Part Is Nothing Then
+        MsgBox "No se pudo crear una pieza nueva. Revisa en Herramientas > Opciones > Ubicaciones de archivos " & _
+               "que haya una plantilla de pieza por defecto.", vbCritical
+        End
+    End If
+    Set NuevaPieza = Part
+End Function
+
+Sub Material(cfg As String, nombre As String)
+    Dim bd As String, asignado As String
+    On Error Resume Next
+    Part.SetMaterialPropertyName2 cfg, DB, nombre
+    asignado = Part.GetMaterialPropertyName2(cfg, bd)
+    If asignado = "" Then Nota "  Aviso: material '" & nombre & "' no encontrado (" & cfg & "). Asígnalo a mano."
+    On Error GoTo 0
+End Sub
+
+Sub CotaEnConfig(nombreCota As String, valor As Double)
+    Dim d As Object
+    On Error Resume Next
+    Set d = Part.Parameter(nombreCota)
+    If d Is Nothing Then
+        Nota "  Aviso: no se encontró la cota " & nombreCota
+    Else
+        d.SetSystemValue2 mm(valor), 1       ' 1 = solo en esta configuración
+    End If
+    On Error GoTo 0
+End Sub
+
+Sub SuprimirEnConfig(nombreOp As String)
+    Dim f As Object
+    Set f = Part.FeatureByName(nombreOp)
+    If f Is Nothing Then
+        Nota "  Aviso: no se encontró la operación " & nombreOp
+    Else
+        f.SetSuppression2 0, 1, Empty        ' suprimir solo en esta configuración
+    End If
+End Sub
+
+' Crea las 3 configuraciones. matAl/matAc/matMa = materiales; cotaVac = cota del vaciado (bandejas);
+' opMadera = operación que se suprime en madera (hueco del tubo)
+Sub Configuraciones(matAc As String, matAl As String, matMa As String, _
+                    Optional cotaVac As String = "", Optional vAc As Double = 0, Optional vAl As Double = 0, Optional vMa As Double = 0, _
+                    Optional opMadera As String = "")
+    Dim c As Object
+    Set c = Part.GetActiveConfiguration
+    c.Name = "ALT2_ALUMINIO"
+    Material "ALT2_ALUMINIO", matAl
+    If cotaVac <> "" Then CotaEnConfig cotaVac, vAl
+    Part.AddConfiguration3 "ALT1_ACERO", "Alternativa 1: acero", "", 0
+    Part.ShowConfiguration2 "ALT1_ACERO"
+    Material "ALT1_ACERO", matAc
+    If cotaVac <> "" Then CotaEnConfig cotaVac, vAc
+    Part.AddConfiguration3 "ALT3_MADERA", "Alternativa 3: madera", "", 0
+    Part.ShowConfiguration2 "ALT3_MADERA"
+    Material "ALT3_MADERA", matMa
+    If cotaVac <> "" Then CotaEnConfig cotaVac, vMa
+    If opMadera <> "" Then SuprimirEnConfig opMadera
+    Part.ShowConfiguration2 "ALT2_ALUMINIO"
+    Part.EditRebuild3
+End Sub
+
+Sub GuardarYMedir(nombre As String, cantidad As Integer)
+    Dim cfgs, i As Integer, mp As Object, errs As Long, warns As Long
+    Part.EditRebuild3
+    cfgs = Part.GetConfigurationNames
+    Dim fila As String: fila = nombre & ";" & cantidad
+    Dim orden: orden = Array("ALT1_ACERO", "ALT2_ALUMINIO", "ALT3_MADERA")
+    For i = 0 To 2
+        If Part.ShowConfiguration2(orden(i)) Then
+            Part.EditRebuild3
+            Set mp = Part.Extension.CreateMassProperty
+            If mp Is Nothing Then
+                fila = fila & ";"
+            Else
+                fila = fila & ";" & Format(mp.Mass * 1000, "0.0")
+            End If
+        Else
+            fila = fila & ";"
+        End If
+    Next i
+    Part.ShowConfiguration2 "ALT2_ALUMINIO"
+    Part.EditRebuild3
+    csv = csv & fila & vbCrLf
+    Part.Extension.SaveAs CARPETA & nombre & ".SLDPRT", 0, 1, Nothing, errs, warns
+    If errs <> 0 Then Nota "  ERROR al guardar " & nombre & " (código " & errs & ")"
+    swApp.CloseDoc Part.GetTitle
+    Nota "OK  " & nombre
+End Sub
+
+' ---------- piezas ----------
+' Tubo rectangular a (fondo, Z) x b (lateral, X), eje Y, extremos cortados con el ángulo dado
+Sub Tubo(nombre As String, L As Double, a As Double, b As Double, t As Double, ang As Double, agujeros, cantidad As Integer)
+    Dim h As Double, y
+    NuevaPieza
+    AbrirCroquis 2: Rect 0, 0, b, a: CerrarCroquis "CroquisPerfil"
+    Extruir L, "Perfil"
+    AbrirCroquis 2: Rect 0, 0, b - 2 * t, a - 2 * t: CerrarCroquis "CroquisHueco"
+    CortarMedio 2 * L, "Hueco"
+    ' cortes inclinados de los extremos (quedan paralelos al suelo)
+    h = a * Tan(ang * 3.14159265358979 / 180#)
+    AbrirCroquis 3
+    Linea -a / 2, 0, a / 2, 0: Linea a / 2, 0, a / 2, h: Linea a / 2, h, -a / 2, 0
+    Linea -a / 2, L - h, -a / 2, L: Linea -a / 2, L, a / 2, L: Linea a / 2, L, -a / 2, L - h
+    CerrarCroquis "CroquisExtremos"
+    CortarTodo "CorteExtremos"
+    ' taladros para los pasadores
+    AbrirCroquis 3
+    For Each y In agujeros
+        Circulo 0, CDbl(y), 4.25
+    Next y
+    CerrarCroquis "CroquisTaladros"
+    CortarTodo "Taladros"
+    Configuraciones "Plain Carbon Steel", "6063-T5", "Beech", , , , , "Hueco"
+    GuardarYMedir nombre, cantidad
+End Sub
+
+Sub Travesano(nombre As String, L As Double, cantidad As Integer)
+    NuevaPieza
+    AbrirCroquis 3: Rect 0, 0, 20, 20: CerrarCroquis "CroquisPerfil"
+    Extruir L, "Perfil", True
+    AbrirCroquis 3: Rect 0, 0, 16, 16: CerrarCroquis "CroquisHueco"
+    CortarMedio L, "Hueco"
+    Configuraciones "Plain Carbon Steel", "6063-T5", "Beech", , , , , "Hueco"
+    GuardarYMedir nombre, cantidad
+End Sub
+
+' Bandeja (plataforma o peldaño): W ancho (X), D fondo (Z), H alto (Y). Frente en Z = +D/2.
+Sub Bandeja(nombre As String, W As Double, D As Double, H As Double, dBiela As Double, conAsa As Boolean)
+    NuevaPieza
+    AbrirCroquis 2: Rect 0, 0, W, D: CerrarCroquis "CroquisBase"
+    Extruir H, "Cuerpo"
+    Part.ClearSelection2 True
+    Part.Extension.SelectByID2 "", "FACE", 0, 0, 0, False, 0, Nothing, 0
+    Part.InsertFeatureShell mm(3), False
+    UltimaOperacion.Name = "Vaciado"
+    If conAsa Then
+        AbrirCroquis 2: Rect 0, D / 2 - 45, 120, 30: CerrarCroquis "CroquisAsa"
+        CortarTodo "HuecoAsa"
+    End If
+    ' taladros laterales: pivote a 20 mm del frente y enganche de la biela
+    AbrirCroquis 3
+    Circulo -(D / 2 - 20), H - 15, 4.25
+    Circulo -(D / 2 - 20 - dBiela), H - 15, 4.25
+    CerrarCroquis "CroquisTaladros"
+    CortarTodo "Taladros"
+    Configuraciones "Plain Carbon Steel", "PP Copolymer", "Beech", "D1@Vaciado", 1.2, 3, 15
+    GuardarYMedir nombre, 1
+End Sub
+
+Sub Biela(nombre As String, c As Double, cantidad As Integer)
+    NuevaPieza
+    AbrirCroquis 1: Rect 0, 0, c + 20, 20: CerrarCroquis "CroquisPletina"
+    Extruir 4, "Pletina"
+    AbrirCroquis 1: Circulo -c / 2, 0, 4.25: Circulo c / 2, 0, 4.25: CerrarCroquis "CroquisTaladros"
+    CortarTodo "Taladros"
+    Configuraciones "Plain Carbon Steel", "6063-T5", "Plain Carbon Steel"
+    GuardarYMedir nombre, cantidad
+End Sub
+
+Sub Pasador()
+    NuevaPieza
+    AbrirCroquis 1: Circulo 0, 0, 4: CerrarCroquis "CroquisPasador"
+    Extruir 45, "Pasador"
+    Configuraciones "Plain Carbon Steel", "Plain Carbon Steel", "Plain Carbon Steel"
+    GuardarYMedir "Pasador", 10
+End Sub
+
+Sub Taco()
+    NuevaPieza
+    AbrirCroquis 2: Rect 0, 0, 24, 44: CerrarCroquis "CroquisTaco"
+    Extruir 25, "Cuerpo"
+    AbrirCroquis 2: Rect 0, 0, 20, 40: CerrarCroquis "CroquisAlojamiento"
+    CortarMedio 40, "Alojamiento"
+    Configuraciones "Rubber", "Rubber", "Rubber"
+    GuardarYMedir "Taco", 4
+End Sub
+
+' ---------- programa principal ----------
+Sub main()
+    Set swApp = Application.SldWorks
+    On Error Resume Next
+    MkDir "C:\Taburete"
+    On Error GoTo 0
+    informe = "": csv = "Pieza;Cantidad;Masa ALT1_ACERO (g);Masa ALT2_ALUMINIO (g);Masa ALT3_MADERA (g)" & vbCrLf
+
+    ' Cotas procedentes del estudio cinemático (cad/cinematica.py)
+    Tubo "Larguero_delantero", 810, 40, 20, 2, 15, Array(233, 481, 680), 2
+    Tubo "Pata_trasera", 761, 40, 20, 2, 26, Array(731, 611, 331), 2
+    Travesano "Travesano_asidero", 410, 1
+    Travesano "Travesano_trasero", 360, 1
+    Bandeja "Plataforma", 350, 300, 30, 233.3, True
+    Bandeja "Peldano", 350, 230, 30, 179.7, False
+    Biela "Biela_plataforma", 154.3, 2
+    Biela "Tirante_peldano", 132.7, 2
+    Pasador
+    Taco
+
+    Dim f As Integer: f = FreeFile
+    Open CARPETA & "masas_solidworks.csv" For Output As #f
+    Print #f, csv
+    Close #f
+
+    MsgBox "Macro terminada." & vbCrLf & vbCrLf & informe & vbCrLf & _
+           "Piezas y masas guardadas en " & CARPETA, vbInformation, "Taburete"
+End Sub
