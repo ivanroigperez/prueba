@@ -36,37 +36,36 @@ P("Durante el trabajo he tenido que tomar muchas decisiones sin un enunciado ni 
 P("Impacto: Alto = podría cambiar una conclusión o costar bastante nota. Medio = discutible, pero defendible si lo explicas. Bajo = detalle.",i=True,c=GRIS,size=9.5,after=10)
 
 D=[
-# (apartado, titulo, impacto, decision, por que, duda, comprobar)
-("1. Enfoque general","El ACV está en kg de CO₂ equivalente, no en Ecopuntos (ECO-it)","Alto",
- "Calcular solo la huella de carbono con factores de la base de datos ICE v2.0 (Universidad de Bath) y el módulo D de la norma EN 15804.",
- "No tenía acceso a ECO-it ni a su base de datos, y los kg de CO₂ se pueden calcular y justificar con fuentes públicas.",
- "El temario de la asignatura menciona ECO-it y el Eco-indicador 99. Es muy posible que el profesor espere el ACV hecho con esa herramienta y en milipuntos. La huella de carbono es un indicador válido, pero solo mide el cambio climático; otros impactos (toxicidad, agotamiento de recursos) podrían cambiar el orden entre acero y aluminio.",
- "Pregunta al profesor si acepta kg de CO₂-eq. Si no lo acepta, rehaz las tablas 12 a 14 con ECO-it usando las masas de la Tabla 10: las masas y las fases ya están, solo cambian los factores."),
-("4. Evaluación","La alternativa de madera usa la misma geometría que la metálica","Alto",
- "Modelar las tres alternativas con la misma forma y cambiar solo el material, macizando los perfiles en la madera.",
- "Así la comparación del ACV es directa: la única variable es el material.",
- "Un listón de haya macizo de 40 × 20 mm es demasiado esbelto para 150 kg. Una escalera de madera real tendría largueros de unos 20 × 60 mm o más, así que pesaría más de los 3,96 kg calculados y emitiría algo más. La conclusión de que la madera es la mejor opción (Tabla 15) se basa en un peso que probablemente es optimista.",
- "Haz un cálculo rápido a flexión del larguero con 150 kg (o un estudio en SolidWorks Simulation) para cada material y ajusta la sección antes de comparar. Si la madera supera claramente los 3,5 kg, la decisión se inclina hacia el aluminio reciclado."),
-("3.4 y 5.2","El taburete modelado no tiene ningún bloqueo en posición abierta","Alto",
- "Dejar el pestillo de seguridad sin modelar y proponerlo como acción del AMFEC.",
- "El mecanismo de plegado ya era bastante complejo y quería asegurar primero que se plegaba sin interferencias.",
- "El mecanismo tiene un solo grado de libertad: sin pestillo, lo único que lo mantendría abierto sería el rozamiento. En el TRIZ (contradicción tercera) digo que el tirante queda «pasado de su punto muerto» y se autobloquea con la carga, pero en el rediseño del apartado 3.4 no he comprobado que eso ocurra con la geometría final. Es el punto técnico más débil del trabajo y el primero que puede preguntar un profesor de mecánica.",
- "Si hay tiempo, modela un pasador con muelle en la articulación de la plataforma. Si no, ten preparada la explicación: un grado de libertad, se bloquea una articulación y se retira el pasador para plegar."),
-("3.4","No hay ningún cálculo resistente ni de estabilidad","Alto",
- "Tomar las secciones (tubo de 40 × 20 × 2, pletinas de 20 × 4, pasadores de Ø 8 y plataforma de PP de 3 mm) por comparación con productos del mercado.",
- "La asignatura no pide cálculo estructural y las prácticas de Simulation son opcionales.",
- "No sé si la plataforma de PP de 3 mm, con 350 mm de luz y sin nervios, aguanta 150 kg: casi seguro que no sin nervios. Tampoco he comprobado a cortante los pasadores ni el vuelco lateral con el ensayo de la UNE-EN 14183. En la Tabla 2 (P1 y P2) digo que se superarán los ensayos, pero no está demostrado.",
- "Lo ideal es un estudio estático en SolidWorks Simulation de la plataforma y del larguero con 150 kg (hay una práctica de viga en voladizo que sirve de guía). Como mínimo, menciona en la defensa que es la siguiente fase del diseño de detalle."),
+("1. Enfoque general","El ACV está en kg de CO₂ equivalente, no en Ecopuntos (ECO-it)","Bajo",
+ "Calcular la huella de carbono con factores de la base de datos ICE v2.0 y el módulo D de la norma EN 15804.",
+ "El índice de ejemplo del profesor evalúa en «kg CO₂-eq por componente en la fase de producción, uso y eliminación», el mismo formato.",
+ "Resuelta en gran parte: el formato coincide con el del ejemplo. Solo queda la duda de si el profesor espera que se use ECO-it como herramienta.",
+ "Nada obligatorio. Si en clase se usó ECO-it, puedes comprobar uno de los resultados con él."),
+("4.5","Decisión final: aluminio reciclado (antes era la madera)","Medio",
+ "Aplicar primero un filtro de requisitos imprescindibles (Tabla 16). El acero y la madera no cumplen P5 y quedan descartados, así que se elige el aluminio reciclado.",
+ "Otra revisión detectó que la versión anterior elegía la madera, que pesa 3,96 kg, y que la matriz le daba un 4 en peso. Con un 1 en peso ganaba el aluminio. Ahora la conclusión coincide con el modelo, los planos y el capítulo 5.",
+ "La madera queda descartada por un peso calculado con una sección simplificada. Puede que un diseño de madera bien hecho también cumpla, pero no está demostrado.",
+ "Si te preguntan por qué no la madera: incumple un requisito imprescindible y su modelo no está verificado. Queda como línea futura."),
+("3.5","Comprobaciones por cálculo manual","Medio",
+ "Añadir el apartado 3.5 con cálculos sencillos: flexión y pandeo del larguero, plataforma, pasadores, vuelco y mecanismo.",
+ "No había ninguna comprobación de P1, P2 ni R3.",
+ "Los cálculos son simplificados (viga biapoyada, carga estática de 150 kg, coeficiente de seguridad de 2) y no sustituyen a un estudio por elementos finitos ni a los ensayos de la norma. La plataforma y el peldaño cumplen por poco (coeficiente de seguridad 2,0) y el peso final estimado (3,46 kg) apenas cumple P5. Los nervios no están dibujados en el modelo ni en los planos.",
+ "Si quieres reforzarlo, haz un estudio estático de la plataforma en SolidWorks Simulation."),
+("3.5 y 5.2","El pestillo está dimensionado pero no modelado","Medio",
+ "Calcular con el modelo cinemático cómo actúa el peso del usuario y dimensionar el pestillo en la articulación del peldaño.",
+ "El cálculo demuestra que el peso sobre el peldaño tiende a cerrar el taburete, así que el pestillo es imprescindible.",
+ "El pestillo sigue sin estar en el modelo 3D ni en los planos.",
+ "Explícalo como diseño de detalle pendiente. Los números (522 N·m y unos 710 N por pasador) están en la Tabla 11."),
 ("Estructura","He añadido un capítulo 5 (QFD, AMFEC y análisis del valor) que no está en el índice del profesor","Medio",
  "Añadir las técnicas de rediseño del temario en un capítulo propio.",
  "Están en los apuntes («Técnicas de rediseño») y me pareció que sumaban.",
  "El índice de ejemplo termina en «Evaluación» y «Anexos». Puede que el profesor lo valore, que le dé igual o que prefiera que no se alargue el trabajo. Además, el rediseño está hecho sobre la alternativa de aluminio mientras que la conclusión elige la madera; lo justifico en el texto, pero es discutible.",
  "Pregunta si quiere esas técnicas. Si no las quiere, se puede quitar el capítulo 5 entero sin que se rompa nada (solo habría que actualizar el índice)."),
-("4.5","La matriz de decisión es subjetiva","Medio",
- "Pesos de 30 / 25 / 20 / 15 / 10 % y puntuaciones de 1 a 5 puestas por mí.",
- "Es lo habitual en una matriz ponderada y los pesos siguen la importancia del EDP.",
- "A la madera le doy un 4 en peso aunque no cumple P5 (3,96 kg > 3,5 kg). Si le pusiera un 3 y además el peso valiera un 35 % y la huella un 20 %, ganaría el aluminio (3,70 frente a 3,45). Las notas de coste, durabilidad y estética no salen de ningún dato.",
- "En la defensa, explica que la decisión es sensible a los pesos y que por eso se mantiene el aluminio reciclado como alternativa. Si quieres, añade un análisis de sensibilidad (dos o tres combinaciones de pesos)."),
+("5.2","El AMFEC no calcula la criticidad (G × O)","Bajo",
+ "Usar solo el IPR = O × G × D.",
+ "Es lo único que definen los apuntes de Técnicas de rediseño; la palabra «criticidades» solo aparece en el nombre de la técnica.",
+ "Otra revisión lo señaló como fallo. Según tus apuntes no lo es, pero algunos profesores lo piden.",
+ "Si quieres cubrirte, añade una columna G × O a la Tabla 17. Son 8 multiplicaciones."),
 ("4.1","Hipótesis del ACV","Medio",
  "600 km de transporte, reciclaje del 90 % de los metales, cambio de tacos una vez en 10 años, incineración de plásticos y valorización de la madera con CO₂ biogénico no contabilizado.",
  "Son valores razonables y habituales en ACV simplificados.",
@@ -123,6 +122,7 @@ D=[
  "En la versión anterior la caja medía 640 mm, un error que he corregido en esta revisión. No he contado cantoneras ni el grosor real del cartón.",
  "Nada que hacer; solo tenlo en cuenta si comparas con una versión antigua del documento."),
 ]
+D.sort(key=lambda x:{"Alto":0,"Medio":1,"Bajo":2}[x[2]])
 # tabla resumen
 P("Resumen",True,c=OSC,size=13,after=4)
 t=d.add_table(rows=1,cols=3); t.alignment=WD_TABLE_ALIGNMENT.CENTER; t.style="Table Grid"
@@ -148,6 +148,6 @@ for i,(ap,ti,imp,dec,porq,duda,comp) in enumerate(D,1):
         campo(P(after=3),et,txt)
     P("",after=4)
 d.add_heading("Consejo final para la defensa",level=1)
-P("Las dudas de impacto alto (1 a 4) son las que un profesor de Ingeniería Mecánica puede ver con más facilidad. No hace falta resolverlas todas; basta con que las conozcas y sepas explicar por qué se tomó esa decisión y cuál sería el siguiente paso. Decir «esto no está verificado y se comprobaría así» suele puntuar mejor que dar un dato que luego no sabes justificar.")
+P("Las dudas de impacto medio son las que un profesor de Ingeniería Mecánica puede ver con más facilidad. No hace falta resolverlas todas; basta con que las conozcas y sepas explicar por qué se tomó esa decisión y cuál sería el siguiente paso. Decir «esto no está verificado y se comprobaría así» suele puntuar mejor que dar un dato que luego no sabes justificar.")
 P("Recuerda también que todo el trabajo tiene que poder defenderlo quien lo firma. Repasa los cálculos del ACV, la cinemática del plegado y la matriz de decisión hasta que puedas explicarlos sin el documento delante.")
 d.save("Dudas_y_decisiones.docx"); print(len(D),"dudas")

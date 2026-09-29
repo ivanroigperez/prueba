@@ -61,7 +61,7 @@ p=par(after=4); p.add_run().add_picture("portada/render_portada.png",height=Cm(9
 par("Plegado  ·  Abierto",8.5,GRIS,italic=True,after=14)
 # 4. cifras clave
 t=tabla(1,4,[4.0,4.0,4.0,4.0])
-for c,(v,l) in zip(t.rows[0].cells,(("0,48 m","altura de plataforma"),("150 kg","carga máxima"),("40 mm","espesor plegado"),("3,17 kg","peso (alt. aluminio)"))):
+for c,(v,l) in zip(t.rows[0].cells,(("0,48 m","altura de plataforma"),("150 kg","carga máxima"),("40 mm","espesor plegado"),("3,46 kg","peso estimado"))):
     sombrear(c,"F3F4F6"); texto_celda(c,[("",3,OSC,False),(v,17,ROJO,True),(l,8.5,GRIS,False),("",3,OSC,False)])
 # 5. autor
 par("",before=30)
