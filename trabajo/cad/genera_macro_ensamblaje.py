@@ -12,7 +12,7 @@ def comps(pleg):
     L=[]
     for sx in (-1,1):
         L.append(("Larguero_delantero",RX(15)@RY180,np.array([sx*215.,0,0])))
-        R0=RX(-26)@RY180; Pl=Pw.copy(); Pl[0]=sx*190; t0=Pl-R0@np.array([0,731.,0])
+        R0=RX(-26); Pl=Pw.copy(); Pl[0]=sx*190; t0=Pl-R0@np.array([0,731.,0])
         R,t=(about(RX(41),Pl,R0,t0) if pleg else (R0,t0)); L.append(("Pata_trasera",R,t))
     L.append(("Travesano_asidero",np.eye(3),W(790*d)))
     R,t=np.eye(3),W(P+650*rh)
