@@ -1,0 +1,129 @@
+{
+ "ALT1_ACERO": {
+  "masa_kg": 9.198,
+  "produccion": 13.233,
+  "transporte": 0.3709,
+  "uso": 0.15,
+  "fin_de_vida": 0.162,
+  "prod_componentes": {
+   "Larguero_delantero": 4.034,
+   "Pata_trasera": 3.742,
+   "Travesano_asidero": 0.668,
+   "Travesano_trasero": 0.586,
+   "Plataforma": 1.789,
+   "Peldano": 1.467,
+   "Biela_plataforma": 0.295,
+   "Tirante_peldano": 0.257,
+   "Pasador": 0.246,
+   "Taco": 0.15
+  },
+  "fin_componentes": {
+   "Larguero_delantero": 0.0,
+   "Pata_trasera": 0.0,
+   "Travesano_asidero": 0.0,
+   "Travesano_trasero": 0.0,
+   "Plataforma": 0.0,
+   "Peldano": 0.0,
+   "Biela_plataforma": 0.0,
+   "Tirante_peldano": 0.0,
+   "Pasador": 0.0,
+   "Taco": 0.131
+  },
+  "modulo_D": -6.869,
+  "D_componentes": {
+   "Larguero_delantero": -2.087,
+   "Pata_trasera": -1.936,
+   "Travesano_asidero": -0.345,
+   "Travesano_trasero": -0.303,
+   "Plataforma": -0.972,
+   "Peldano": -0.797,
+   "Biela_plataforma": -0.158,
+   "Tirante_peldano": -0.138,
+   "Pasador": -0.132
+  },
+  "total_A_C": 13.916,
+  "total_con_D": 7.047
+ },
+ "ALT2_ALUMINIO": {
+  "masa_kg": 3.17,
+  "produccion": 24.772,
+  "transporte": 0.1278,
+  "uso": 0.15,
+  "fin_de_vida": 2.214,
+  "prod_componentes": {
+   "Larguero_delantero": 8.746,
+   "Pata_trasera": 8.11,
+   "Travesano_asidero": 1.447,
+   "Travesano_trasero": 1.271,
+   "Plataforma": 1.959,
+   "Peldano": 1.603,
+   "Biela_plataforma": 0.661,
+   "Tirante_peldano": 0.577,
+   "Pasador": 0.246,
+   "Taco": 0.15
+  },
+  "fin_componentes": {
+   "Larguero_delantero": 0.0,
+   "Pata_trasera": 0.0,
+   "Travesano_asidero": 0.0,
+   "Travesano_trasero": 0.0,
+   "Plataforma": 1.14,
+   "Peldano": 0.933,
+   "Biela_plataforma": 0.0,
+   "Tirante_peldano": 0.0,
+   "Pasador": 0.0,
+   "Taco": 0.131
+  },
+  "modulo_D": -13.694,
+  "D_componentes": {
+   "Larguero_delantero": -5.699,
+   "Pata_trasera": -5.285,
+   "Travesano_asidero": -0.943,
+   "Travesano_trasero": -0.828,
+   "Biela_plataforma": -0.431,
+   "Tirante_peldano": -0.376,
+   "Pasador": -0.132
+  },
+  "total_A_C": 27.264,
+  "total_con_D": 13.57
+ },
+ "ALT3_MADERA": {
+  "masa_kg": 3.957,
+  "produccion": 2.129,
+  "transporte": 0.1596,
+  "uso": 0.15,
+  "fin_de_vida": 0.144,
+  "prod_componentes": {
+   "Larguero_delantero": 0.171,
+   "Pata_trasera": 0.159,
+   "Travesano_asidero": 0.022,
+   "Travesano_trasero": 0.019,
+   "Plataforma": 0.449,
+   "Peldano": 0.361,
+   "Biela_plataforma": 0.295,
+   "Tirante_peldano": 0.257,
+   "Pasador": 0.246,
+   "Taco": 0.15
+  },
+  "fin_componentes": {
+   "Larguero_delantero": 0.0,
+   "Pata_trasera": 0.0,
+   "Travesano_asidero": 0.0,
+   "Travesano_trasero": 0.0,
+   "Plataforma": 0.0,
+   "Peldano": 0.0,
+   "Biela_plataforma": 0.0,
+   "Tirante_peldano": 0.0,
+   "Pasador": 0.0,
+   "Taco": 0.131
+  },
+  "modulo_D": -0.427,
+  "D_componentes": {
+   "Biela_plataforma": -0.158,
+   "Tirante_peldano": -0.138,
+   "Pasador": -0.132
+  },
+  "total_A_C": 2.583,
+  "total_con_D": 2.156
+ }
+}
