@@ -60,18 +60,18 @@ ax.text(0.9,2.40,"Altillo",ha="center",fontsize=8,color="#6b5a3e")
 ax.text(0.9,0.45,"Mueble bajo",ha="center",fontsize=8,color="#6b5a3e")
 # personas
 persona(ax,2.55,1.50,1.85,RED)
-persona(ax,3.55,1.74,2.15,BLUE)
-for x,y,c in [(2.55+0.13*1.5,1.85,RED),(3.55+0.13*1.74,2.15,BLUE)]:
+persona(ax,3.55,1.70,2.11,BLUE)
+for x,y,c in [(2.55+0.13*1.5,1.85,RED),(3.55+0.13*1.70,2.11,BLUE)]:
     ax.plot([-0.05,4.35],[y,y],color=c,lw=1.1,ls=(0,(5,3)),zorder=4)
 ax.text(4.36,1.85,"1,85 m",color=RED,fontsize=8.5,va="center",fontweight="bold")
-ax.text(4.36,2.15,"2,15 m",color=BLUE,fontsize=8.5,va="center",fontweight="bold")
-cota(ax,2.25,0,1.50,"1,50 m",RED,"l"); cota(ax,3.25,0,1.74,"1,74 m",BLUE,"l")
+ax.text(4.36,2.11,"2,11 m",color=BLUE,fontsize=8.5,va="center",fontweight="bold")
+cota(ax,2.25,0,1.49,"1,49 m",RED,"l"); cota(ax,3.25,0,1.70,"1,70 m",BLUE,"l")
 ax.text(2.55,-0.07,"Mujer P5",ha="center",va="top",fontsize=8,color=RED,fontweight="bold")
 ax.text(3.55,-0.07,"Hombre P50",ha="center",va="top",fontsize=8,color=BLUE,fontweight="bold")
 ax.text(2.0,2.52,"Zona fuera de alcance sin ayuda",color=RED,fontsize=9,fontweight="bold",va="center")
 ax.text(2.0,2.43,"(por encima de 1,85 m para una usuaria de percentil 5)",color=RED,fontsize=7.5,va="center")
 ax.set_title("Alturas habituales del mobiliario de cocina frente al alcance vertical del usuario",fontsize=11,fontweight="bold",loc="left",pad=8)
-ax.text(-0.45,-0.28,"Estaturas y alcances aproximados (alcance ≈ 1,24 × estatura; ver NTP 1050, INSST). Elaboración propia.",fontsize=7,color="#666")
+ax.text(-0.45,-0.28,"Estaturas: INSHT, población laboral española (Carmona, 2003). Alcance vertical ≈ 1,24 × estatura (Pheasant). Elaboración propia.",fontsize=7,color="#666")
 plt.savefig("figura1_alcance_mobiliario.png",bbox_inches="tight"); plt.close()
 
 # ---------------- FIGURA 2 ----------------
