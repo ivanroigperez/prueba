@@ -88,3 +88,71 @@ fig.text(0.01,0.95,"Accidentes domésticos y de ocio en España según su tipo",
 ax.text(0,-0.95,"Más de la mitad de los accidentes se deben a caídas; el 54,5 % ocurre en el interior de la vivienda.",fontsize=8.5,color="#444",transform=ax.get_yaxis_transform())
 fig.text(0.01,0.01,"Fuente: Ministerio de Sanidad / Instituto Nacional del Consumo, informe DADO 2011. Elaboración propia.",fontsize=7,color="#666")
 plt.tight_layout(rect=(0,0.04,1,0.92)); plt.savefig("figura2_accidentes_DADO.png"); plt.close()
+
+# ---------------- FIGURA 3: altura de plataforma necesaria ----------------
+fig,ax=plt.subplots(figsize=(10,6.6),dpi=220)
+ax.set_aspect("equal"); ax.set_xlim(-0.5,4.3); ax.set_ylim(-0.32,2.85); ax.axis("off")
+ax.add_patch(Rectangle((-0.5,-0.12),4.8,0.12,fc="#ececec",ec="none")); ax.plot([-0.5,4.3],[0,0],color=INK,lw=1.2)
+ax.plot([-0.5,4.3],[2.60,2.60],color=GREY,lw=0.8)
+# muebles
+for x0 in (0,):
+    for i in range(2):
+        ax.add_patch(Rectangle((x0+i*0.6+0.01,1.45),0.58,0.75,fc=WOOD,ec=WOOD2,lw=1))
+        ax.add_patch(Rectangle((x0+i*0.6+0.01,2.22),0.58,0.36,fc="#f4ecdf",ec=WOOD2,lw=1))
+ax.add_patch(Rectangle((0.15,2.28),0.30,0.16,fc="#bda5d6",ec="none"))
+ax.add_patch(Rectangle((0.75,1.96),0.14,0.20,fc="#9cc98f",ec="none"))
+ax.text(0.9,2.36,"Altillo",ha="center",fontsize=8,color="#6b5a3e")
+ax.text(0.6,1.60,"Mueble alto",ha="center",fontsize=8,color="#6b5a3e")
+ax.plot([-0.1,4.0],[2.30,2.30],color=INK,lw=1,ls=(0,(2,2)))
+ax.text(4.02,2.30,"Objetivo: 2,30 m\n(balda media del altillo)",fontsize=7.5,va="center",color=INK)
+# A: sin ayuda
+persona(ax,1.75,1.50,1.85,"#d98a80")
+ax.plot([1.5,2.1],[1.85,1.85],color=RED,lw=1.2,ls="--")
+ax.text(1.75,-0.07,"Sin ayuda",ha="center",va="top",fontsize=8.5,fontweight="bold",color=RED)
+ax.text(1.50,1.90,"1,85 m",fontsize=8,color=RED)
+ax.annotate("",xy=(2.22,2.30),xytext=(2.22,1.85),arrowprops=dict(arrowstyle="<|-|>",color=RED,lw=0.9,mutation_scale=7))
+ax.text(2.26,2.07,"faltan\n0,45 m",fontsize=7.5,color=RED,va="center")
+# B: con taburete generico
+h=0.48; xb=3.2
+ax.add_patch(Rectangle((xb-0.28,0),0.56,h,fc="#f0f0f0",ec=INK,lw=1,hatch="///"))
+ax.text(xb,h/2,"Taburete\n(altura h)",ha="center",va="center",fontsize=7.5,bbox=dict(fc="white",ec="none",pad=1))
+import matplotlib.transforms as mt
+def persona_off(ax,x,H,R,c,dy):
+    hip=0.53*H+dy; sh=0.815*H+dy
+    limb(ax,(x-0.045*H,hip),(x-0.06*H,dy+0.02),0.075*H,c); limb(ax,(x+0.045*H,hip),(x+0.06*H,dy+0.02),0.075*H,c)
+    ax.add_patch(Polygon([(x-0.10*H,hip),(x+0.10*H,hip),(x+0.125*H,sh),(x-0.125*H,sh)],fc=c,ec="none",zorder=5))
+    limb(ax,(x-0.11*H,sh-0.01*H),(x-0.15*H,hip-0.03*H),0.05*H,c); limb(ax,(x+0.11*H,sh-0.01*H),(x+0.13*H,R+dy-0.03),0.05*H,c)
+    ax.add_patch(Circle((x,0.93*H+dy),0.065*H,fc=c,ec="none",zorder=5)); limb(ax,(x,0.84*H+dy),(x,0.88*H+dy),0.05*H,c)
+persona_off(ax,xb,1.50,1.85,RED,h)
+ax.plot([xb-0.3,xb+0.55],[1.85+h,1.85+h],color="#1e8449",lw=1.4,ls="--")
+ax.text(xb+0.3,1.85+h+0.03,"2,33 m ✓",fontsize=8.5,color="#1e8449",fontweight="bold")
+cota(ax,xb-0.40,0,h,"h = 0,48 m",INK,"l")
+ax.text(xb,-0.07,"Con taburete",ha="center",va="top",fontsize=8.5,fontweight="bold",color="#1e8449")
+# ecuacion
+ax.text(-0.45,0.95,"Altura mínima de la plataforma:",fontsize=9,fontweight="bold")
+ax.text(-0.45,0.78,r"$h_{min} = H_{objetivo} - A_{P5} = 2{,}30 - 1{,}85 = 0{,}45\ \mathrm{m}$",fontsize=10)
+ax.text(-0.45,0.62,"Se adopta h ≈ 0,48 m (dos peldaños de ≈ 0,24 m)",fontsize=8.5,color="#444")
+ax.set_title("Determinación de la altura de la plataforma superior",fontsize=11,fontweight="bold",loc="left",pad=8)
+ax.text(-0.5,-0.28,"A_P5: alcance vertical máximo aproximado de una usuaria de percentil 5. Elaboración propia.",fontsize=7,color="#666")
+plt.savefig("figura3_altura_plataforma.png",bbox_inches="tight"); plt.close()
+
+# ---------------- FIGURA 4: árbol de funciones ----------------
+fig,ax=plt.subplots(figsize=(10,5.6),dpi=220); ax.set_xlim(0,10); ax.set_ylim(0,5.6); ax.axis("off")
+def caja(x,y,w,h,t,fc,ec,fs=8.5,bold=False,tc=INK):
+    ax.add_patch(FancyBboxPatch((x-w/2,y-h/2),w,h,boxstyle="round,pad=0.02,rounding_size=0.12",fc=fc,ec=ec,lw=1.2))
+    ax.text(x,y,t,ha="center",va="center",fontsize=fs,fontweight="bold" if bold else "normal",color=tc,wrap=True)
+caja(5,5.0,7.4,0.7,"FUNCIÓN PRINCIPAL\nElevar al usuario de forma segura para alcanzar zonas altas","#c0392b","#8e2a1f",9,True,"white")
+grupos=[("Funciones de USO",1.75,["Soportar el peso del usuario","Mantener la estabilidad","Proporcionar apoyo al pie","Ofrecer un punto de agarre"],"#fbe9e7","#c0392b"),
+        ("Funciones de MANIPULACIÓN",5.0,["Desplegarse y plegarse","Bloquearse en posición de uso","Transportarse con una mano","Almacenarse en poco espacio"],"#e8f1fa","#1f6fb2"),
+        ("Funciones COMUNICATIVAS",8.25,["Transmitir seguridad y solidez","Indicar la carga máxima","Mostrar cómo se abre y bloquea","Integrarse en el hogar"],"#eef6ea","#3c8d2f")]
+ax.plot([1.75,8.25],[4.2,4.2],color=GREY,lw=1); ax.plot([5,5],[4.65,4.2],color=GREY,lw=1)
+for t,x,items,fc,ec in grupos:
+    ax.plot([x,x],[4.2,3.95],color=GREY,lw=1)
+    caja(x,3.65,2.9,0.55,t,ec,ec,9,True,"white")
+    for k,it in enumerate(items):
+        y=2.9-k*0.72
+        ax.plot([x-1.35,x-1.35],[3.37,y],color=ec,lw=1); ax.plot([x-1.35,x-1.2],[y,y],color=ec,lw=1)
+        caja(x+0.15,y,2.6,0.5,it,fc,ec,8.2)
+ax.text(5,0.25,"Funciones principales: uso  ·  Funciones secundarias: manipulación y comunicativas",ha="center",fontsize=8,color="#555")
+ax.set_title("Árbol de funciones del taburete-escalera",fontsize=11,fontweight="bold",loc="left")
+plt.savefig("figura4_arbol_funciones.png",bbox_inches="tight"); plt.close()
