@@ -1,0 +1,118 @@
+' ==========================================================================
+'  Macro SOLIDWORKS - Ensamblajes del taburete-escalera
+'  Crea C:\Taburete\Taburete_abierto.SLDASM y C:\Taburete\Taburete_plegado.SLDASM
+'  con las piezas colocadas (posición calculada en el estudio cinemático) y
+'  3 configuraciones que usan ALT1_ACERO, ALT2_ALUMINIO y ALT3_MADERA.
+'  Escribe C:\Taburete\masas_conjunto.csv con la masa total de cada alternativa.
+' ==========================================================================
+Option Explicit
+Const CARPETA As String = "C:\Taburete\"
+Dim swApp As Object
+Dim Assy As Object
+Dim mu As Object
+Dim componentes As Collection
+Dim informe As String
+Dim csv As String
+
+Sub Poner(nombre As String, m)
+    ' m = 9 términos de rotación (ejes X, Y, Z de la pieza) + 3 de traslación en metros
+    Dim comp As Object, d(15) As Double, i As Integer, tr As Object
+    Set comp = Assy.AddComponent5(CARPETA & nombre & ".SLDPRT", 0, "", False, "", 0, 0, 0)
+    If comp Is Nothing Then
+        informe = informe & "  ERROR al insertar " & nombre & vbCrLf
+        Exit Sub
+    End If
+    For i = 0 To 11: d(i) = m(i): Next i
+    d(12) = 1#
+    Set tr = mu.CreateTransform((d))
+    comp.Transform2 = tr
+    componentes.Add comp
+End Sub
+
+Sub AbrirPiezas()
+    Dim n, errs As Long, warns As Long
+    For Each n In Array("Larguero_delantero", "Pata_trasera", "Travesano_asidero", "Travesano_trasero", _
+                        "Plataforma", "Peldano", "Biela_plataforma", "Tirante_peldano")
+        swApp.OpenDoc6 CARPETA & n & ".SLDPRT", 1, 1, "", errs, warns
+    Next n
+End Sub
+
+Sub Crear(nombre As String, plegado As Boolean)
+    Dim plantilla As String, c, cfg, k As Integer, errs As Long, warns As Long, mp As Object, fila As String
+    plantilla = swApp.GetUserPreferenceStringValue(9)
+    Set Assy = swApp.NewDocument(plantilla, 0, 0, 0)
+    If Assy Is Nothing Then MsgBox "No se pudo crear el ensamblaje (plantilla).", vbCritical: End
+    Set componentes = New Collection
+    If plegado Then
+    Poner "Larguero_delantero", Array(-1.000000, 0.000000, 0.000000, 0.000000, 0.965926, 0.258819, 0.000000, 0.258819, -0.965926, -0.215000, 0.000000, 0.000000)
+    Poner "Pata_trasera", Array(-1.000000, 0.000000, 0.000000, 0.000000, 0.965926, 0.258819, 0.000000, 0.258819, -0.965926, -0.190000, -0.049262, -0.013200)
+    Poner "Larguero_delantero", Array(-1.000000, 0.000000, 0.000000, 0.000000, 0.965926, 0.258819, 0.000000, 0.258819, -0.965926, 0.215000, 0.000000, 0.000000)
+    Poner "Pata_trasera", Array(-1.000000, 0.000000, 0.000000, 0.000000, 0.965926, 0.258819, 0.000000, 0.258819, -0.965926, 0.190000, -0.049262, -0.013200)
+    Poner "Travesano_asidero", Array(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.763081, 0.204467)
+    Poner "Travesano_trasero", Array(1.000000, 0.000000, 0.000000, 0.000000, 0.754710, 0.656059, 0.000000, -0.656059, 0.754710, 0.000000, 0.028978, 0.007765)
+    Poner "Plataforma", Array(-1.000000, 0.000000, 0.000000, 0.000000, 0.258819, -0.965926, 0.000000, -0.965926, -0.258819, 0.000000, 0.586298, 0.172627)
+    Poner "Peldano", Array(-1.000000, 0.000000, 0.000000, 0.000000, 0.258819, -0.965926, 0.000000, -0.965926, -0.258819, 0.000000, 0.312941, 0.099382)
+    Poner "Biela_plataforma", Array(0.000000, -0.965926, -0.258819, 0.000000, 0.258819, -0.965926, 1.000000, 0.000000, 0.000000, -0.179500, 0.615430, 0.164904)
+    Poner "Biela_plataforma", Array(0.000000, -0.965926, -0.258819, 0.000000, 0.258819, -0.965926, 1.000000, 0.000000, 0.000000, 0.175500, 0.615430, 0.164904)
+    Poner "Tirante_peldano", Array(0.000000, -0.965926, -0.258819, 0.000000, 0.258819, -0.965926, 1.000000, 0.000000, 0.000000, -0.179500, 0.334556, 0.089644)
+    Poner "Tirante_peldano", Array(0.000000, -0.965926, -0.258819, 0.000000, 0.258819, -0.965926, 1.000000, 0.000000, 0.000000, 0.175500, 0.334556, 0.089644)
+    Else
+    Poner "Larguero_delantero", Array(-1.000000, 0.000000, 0.000000, 0.000000, 0.965926, 0.258819, 0.000000, 0.258819, -0.965926, -0.215000, 0.000000, 0.000000)
+    Poner "Pata_trasera", Array(-1.000000, 0.000000, 0.000000, 0.000000, 0.898794, -0.438371, 0.000000, -0.438371, -0.898794, -0.190000, -0.000189, 0.496446)
+    Poner "Larguero_delantero", Array(-1.000000, 0.000000, 0.000000, 0.000000, 0.965926, 0.258819, 0.000000, 0.258819, -0.965926, 0.215000, 0.000000, 0.000000)
+    Poner "Pata_trasera", Array(-1.000000, 0.000000, 0.000000, 0.000000, 0.898794, -0.438371, 0.000000, -0.438371, -0.898794, 0.190000, -0.000189, 0.496446)
+    Poner "Travesano_asidero", Array(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.763081, 0.204467)
+    Poner "Travesano_trasero", Array(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.072613, 0.460938)
+    Poner "Plataforma", Array(-1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, -1.000000, 0.000000, 0.449610, 0.254492)
+    Poner "Peldano", Array(-1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, -1.000000, 0.000000, 0.210061, 0.155305)
+    Poner "Biela_plataforma", Array(0.000000, 0.546826, -0.837246, -0.000000, 0.837246, 0.546826, 1.000000, 0.000000, 0.000000, -0.179500, 0.506792, 0.293186)
+    Poner "Biela_plataforma", Array(0.000000, 0.546826, -0.837246, -0.000000, 0.837246, 0.546826, 1.000000, 0.000000, 0.000000, 0.175500, 0.506792, 0.293186)
+    Poner "Tirante_peldano", Array(0.000000, 0.544406, 0.838822, 0.000000, -0.838822, 0.544406, 1.000000, 0.000000, 0.000000, -0.179500, 0.261186, 0.295683)
+    Poner "Tirante_peldano", Array(0.000000, 0.544406, 0.838822, 0.000000, -0.838822, 0.544406, 1.000000, 0.000000, 0.000000, 0.175500, 0.261186, 0.295683)
+    End If
+    ' fijar todos los componentes en su posición
+    Assy.ClearSelection2 True
+    For Each c In componentes
+        c.Select4 True, Nothing, False
+    Next c
+    Assy.FixComponent
+    Assy.ClearSelection2 True
+    ' configuraciones por alternativa de material
+    Assy.GetActiveConfiguration.Name = "ALT2_ALUMINIO"
+    Assy.AddConfiguration3 "ALT1_ACERO", "Alternativa 1: acero", "", 0
+    Assy.AddConfiguration3 "ALT3_MADERA", "Alternativa 3: madera", "", 0
+    fila = nombre
+    For Each cfg In Array("ALT1_ACERO", "ALT2_ALUMINIO", "ALT3_MADERA")
+        Assy.ShowConfiguration2 cfg
+        For Each c In componentes
+            c.ReferencedConfiguration = cfg
+        Next c
+        Assy.EditRebuild3
+        Set mp = Assy.Extension.CreateMassProperty
+        If mp Is Nothing Then fila = fila & ";" Else fila = fila & ";" & Format(mp.Mass, "0.000")
+    Next cfg
+    Assy.ShowConfiguration2 "ALT2_ALUMINIO"
+    Assy.EditRebuild3
+    Assy.ShowNamedView2 "", 7
+    Assy.ViewZoomtofit2
+    csv = csv & fila & vbCrLf
+    Assy.Extension.SaveAs CARPETA & nombre & ".SLDASM", 0, 1, Nothing, errs, warns
+    If errs <> 0 Then informe = informe & "  ERROR al guardar " & nombre & vbCrLf
+    informe = informe & "OK  " & nombre & " (" & componentes.Count & " componentes)" & vbCrLf
+End Sub
+
+Sub main()
+    Set swApp = Application.SldWorks
+    Set mu = swApp.GetMathUtility
+    csv = "Ensamblaje;Masa ALT1_ACERO (kg);Masa ALT2_ALUMINIO (kg);Masa ALT3_MADERA (kg)" & vbCrLf
+    AbrirPiezas
+    Crear "Taburete_plegado", True
+    swApp.CloseDoc Assy.GetTitle
+    Crear "Taburete_abierto", False
+    Dim f As Integer: f = FreeFile
+    Open CARPETA & "masas_conjunto.csv" For Output As #f
+    Print #f, csv
+    Close #f
+    MsgBox "Ensamblajes creados." & vbCrLf & vbCrLf & informe & vbCrLf & _
+           "Masas totales en " & CARPETA & "masas_conjunto.csv", vbInformation, "Taburete"
+End Sub
