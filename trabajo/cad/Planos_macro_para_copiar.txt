@@ -1,0 +1,232 @@
+' ==========================================================================
+'  Macro SOLIDWORKS - Planos del taburete-escalera (A3, ISO, primer diedro)
+'  Necesita las piezas y ensamblajes de C:\Taburete\ (macros anteriores).
+'  Crea 5 dibujos .SLDDRW y su PDF en C:\Taburete\:
+'    Plano1_Conjunto_abierto   (1:10, vistas + isometrica + lista de piezas + globos)
+'    Plano2_Conjunto_plegado   (1:10)
+'    Plano3_Larguero_y_pata    (1:5)
+'    Plano4_Plataforma_y_peldano (1:5)
+'    Plano5_Piezas_varias      (1:2 y 1:1)
+'  Las cotas de las piezas que no salen solas se ponen a mano (ver guia).
+' ==========================================================================
+Option Explicit
+Const CARPETA As String = "C:\Taburete\"
+Const ALUMNO As String = "[nombre y apellidos]"   ' <-- pon aqui tu nombre
+Const CFG As String = "ALT2_ALUMINIO"
+
+Dim swApp As Object
+Dim Part As Object
+Dim Drw As Object
+Dim informe As String
+Dim FMT As String, BOMTPL As String
+Dim FRONTAL, SUPERIOR, IZQ, ISO
+
+' ---------- utilidades ----------
+Function Buscar(archivo As String) As String
+    ' busca plantillas de SolidWorks en las carpetas de idioma (espanol o ingles)
+    Dim raices As New Collection, r, lg, sb, d As String, p As String
+    On Error Resume Next
+    d = Dir(Environ("ProgramData") & "\SOLIDWORKS\SOLIDWORKS*", vbDirectory)
+    Do While d <> ""
+        raices.Add Environ("ProgramData") & "\SOLIDWORKS\" & d & "\lang\"
+        d = Dir()
+    Loop
+    raices.Add swApp.GetExecutablePath & "\lang\"
+    For Each r In raices
+        For Each lg In Array("spanish", "english")
+            For Each sb In Array("sheetformat\", "")
+                p = r & lg & "\" & sb & archivo
+                If Dir(p) <> "" Then Buscar = p: Exit Function
+            Next sb
+        Next lg
+    Next r
+End Function
+
+Sub NuevoPlano(num As Double, den As Double)
+    Dim tpl As String, hoja As String, ok As Boolean
+    tpl = swApp.GetUserPreferenceStringValue(10)
+    Set Part = swApp.NewDocument(tpl, 8, 0.42, 0.297)
+    If Part Is Nothing Then MsgBox "No se pudo crear el dibujo (plantilla de dibujo).", vbCritical: End
+    Set Drw = Part
+    hoja = Drw.GetCurrentSheet.GetName
+    If FMT <> "" Then
+        ok = Drw.SetupSheet5(hoja, 8, 12, num, den, True, FMT, 0.42, 0.297, "", True)
+    Else
+        ok = Drw.SetupSheet5(hoja, 8, 13, num, den, True, "", 0.42, 0.297, "", True)
+    End If
+    If Not ok Then informe = informe & "  Aviso: no se pudo ajustar la hoja A3" & vbCrLf
+End Sub
+
+Function Vista(modelo As String, nombres, x As Double, y As Double, Optional escala As Double = 0) As Object
+    Dim n, v As Object
+    For Each n In nombres
+        Set v = Drw.CreateDrawViewFromModelView3(CARPETA & modelo, CStr(n), x, y, 0)
+        If Not v Is Nothing Then Exit For
+    Next n
+    If v Is Nothing Then
+        informe = informe & "  ERROR vista " & nombres(0) & " de " & modelo & vbCrLf
+        Exit Function
+    End If
+    On Error Resume Next
+    If escala > 0 Then
+        v.UseSheetScale = False
+        v.ScaleDecimal = escala
+    End If
+    If LCase(Right(modelo, 6)) = "sldasm" Then v.ReferencedConfiguration = CFG
+    On Error GoTo 0
+    Set Vista = v
+End Function
+
+Sub Nota(texto As String, x As Double, y As Double)
+    Dim nt As Object
+    Part.ClearSelection2 True
+    Set nt = Part.InsertNote(texto)
+    If Not nt Is Nothing Then nt.GetAnnotation.SetPosition2 x, y, 0
+    Part.ClearSelection2 True
+End Sub
+
+Sub CotasDelModelo()
+    ' inserta las cotas del modelo (longitudes de extrusion, espesores...)
+    On Error Resume Next
+    Part.ClearSelection2 True
+    Drw.InsertModelAnnotations3 0, 32768, True, False, False, False
+    If Err.Number <> 0 Then informe = informe & "  Aviso: no se insertaron cotas del modelo" & vbCrLf
+    On Error GoTo 0
+End Sub
+
+Sub ListaYGlobos(v As Object)
+    Dim bom As Object, op As Object
+    If v Is Nothing Then Exit Sub
+    On Error Resume Next
+    Set bom = v.InsertBomTable4(False, 0.41, 0.287, 2, 1, CFG, BOMTPL, False, 2, False)
+    If bom Is Nothing Then Set bom = v.InsertBomTable4(False, 0.41, 0.287, 2, 1, CFG, "", False, 2, False)
+    If bom Is Nothing Then informe = informe & "  Aviso: no se pudo insertar la lista de piezas" & vbCrLf
+    Drw.ActivateView v.Name
+    Part.ClearSelection2 True
+    Part.Extension.SelectByID2 v.Name, "DRAWINGVIEW", 0, 0, 0, False, 0, Nothing, 0
+    Set op = Drw.CreateAutoBalloonOptions
+    Drw.AutoBalloon5 op
+    Part.ClearSelection2 True
+    On Error GoTo 0
+End Sub
+
+Sub Propiedades(titulo As String, num As String)
+    Dim cpm As Object, k
+    On Error Resume Next
+    Set cpm = Part.Extension.CustomPropertyManager("")
+    For Each k In Array("Title", "Titulo", "Description", "Descripcion")
+        cpm.Add3 CStr(k), 30, titulo, 1
+    Next k
+    For Each k In Array("DrawnBy", "Dibujado", "Author", "Autor")
+        cpm.Add3 CStr(k), 30, ALUMNO, 1
+    Next k
+    For Each k In Array("Company", "Empresa")
+        cpm.Add3 CStr(k), 30, "Universidad de La Rioja", 1
+    Next k
+    For Each k In Array("DwgNo", "Numero")
+        cpm.Add3 CStr(k), 30, num, 1
+    Next k
+    On Error GoTo 0
+End Sub
+
+Sub Guardar(nombre As String)
+    Dim errs As Long, warns As Long
+    Part.ForceRebuild3 False
+    Part.ViewZoomtofit2
+    Part.Extension.SaveAs CARPETA & nombre & ".SLDDRW", 0, 1, Nothing, errs, warns
+    If errs <> 0 Then informe = informe & "  ERROR al guardar " & nombre & vbCrLf
+    Part.Extension.SaveAs CARPETA & nombre & ".PDF", 0, 1, Nothing, errs, warns
+    informe = informe & "OK  " & nombre & vbCrLf
+End Sub
+
+' ---------- planos ----------
+Sub Plano1()
+    Dim vi As Object
+    NuevoPlano 1, 10
+    Vista "Taburete_abierto.SLDASM", FRONTAL, 0.08, 0.17
+    Vista "Taburete_abierto.SLDASM", IZQ, 0.18, 0.17
+    Set vi = Vista("Taburete_abierto.SLDASM", ISO, 0.31, 0.15, 0.1)
+    ListaYGlobos vi
+    Nota "Configuracion representada: " & CFG, 0.03, 0.05
+    Propiedades "CONJUNTO ABIERTO", "1"
+    Guardar "Plano1_Conjunto_abierto"
+End Sub
+
+Sub Plano2()
+    NuevoPlano 1, 10
+    Vista "Taburete_plegado.SLDASM", FRONTAL, 0.09, 0.17
+    Vista "Taburete_plegado.SLDASM", IZQ, 0.18, 0.17
+    Vista "Taburete_plegado.SLDASM", ISO, 0.3, 0.17, 0.1
+    Nota "Espesor plegado: 40 mm", 0.03, 0.05
+    Propiedades "CONJUNTO PLEGADO", "2"
+    Guardar "Plano2_Conjunto_plegado"
+End Sub
+
+Sub Plano3()
+    NuevoPlano 1, 5
+    Vista "Larguero_delantero.SLDPRT", FRONTAL, 0.05, 0.17
+    Vista "Larguero_delantero.SLDPRT", IZQ, 0.1, 0.17
+    Vista "Larguero_delantero.SLDPRT", SUPERIOR, 0.075, 0.045, 1
+    Vista "Pata_trasera.SLDPRT", FRONTAL, 0.18, 0.17
+    Vista "Pata_trasera.SLDPRT", IZQ, 0.23, 0.17
+    Vista "Pata_trasera.SLDPRT", SUPERIOR, 0.205, 0.045, 1
+    CotasDelModelo
+    Nota "Seccion del tubo E 1:1", 0.03, 0.02
+    Nota "Taladros D 8,5 pasantes", 0.28, 0.2
+    Propiedades "LARGUERO DELANTERO (2) Y PATA TRASERA (2)", "3"
+    Guardar "Plano3_Larguero_y_pata"
+End Sub
+
+Sub Plano4()
+    NuevoPlano 1, 5
+    Vista "Plataforma.SLDPRT", FRONTAL, 0.09, 0.26
+    Vista "Plataforma.SLDPRT", SUPERIOR, 0.09, 0.18
+    Vista "Plataforma.SLDPRT", IZQ, 0.18, 0.26
+    Vista "Plataforma.SLDPRT", ISO, 0.08, 0.07, 0.1
+    Vista "Peldano.SLDPRT", FRONTAL, 0.27, 0.26
+    Vista "Peldano.SLDPRT", SUPERIOR, 0.27, 0.18
+    Vista "Peldano.SLDPRT", IZQ, 0.36, 0.26
+    Vista "Peldano.SLDPRT", ISO, 0.18, 0.07, 0.1
+    CotasDelModelo
+    Nota "Espesor de pared 3 mm (ALT2). Taladros D 8,5", 0.03, 0.02
+    Propiedades "PLATAFORMA (1) Y PELDANO (1)", "4"
+    Guardar "Plano4_Plataforma_y_peldano"
+End Sub
+
+Sub Plano5()
+    NuevoPlano 1, 2
+    Vista "Travesano_asidero.SLDPRT", FRONTAL, 0.13, 0.265
+    Vista "Travesano_asidero.SLDPRT", IZQ, 0.26, 0.265
+    Vista "Travesano_trasero.SLDPRT", FRONTAL, 0.13, 0.225
+    Vista "Travesano_trasero.SLDPRT", IZQ, 0.26, 0.225
+    Vista "Biela_plataforma.SLDPRT", FRONTAL, 0.08, 0.17
+    Vista "Biela_plataforma.SLDPRT", SUPERIOR, 0.08, 0.145
+    Vista "Tirante_peldano.SLDPRT", FRONTAL, 0.2, 0.17
+    Vista "Tirante_peldano.SLDPRT", SUPERIOR, 0.2, 0.145
+    Vista "Pasador.SLDPRT", FRONTAL, 0.29, 0.17, 1
+    Vista "Pasador.SLDPRT", IZQ, 0.34, 0.17, 1
+    Vista "Taco.SLDPRT", FRONTAL, 0.08, 0.09, 1
+    Vista "Taco.SLDPRT", SUPERIOR, 0.08, 0.045, 1
+    CotasDelModelo
+    Nota "Pasador y taco E 1:1", 0.03, 0.02
+    Propiedades "TRAVESANOS, BIELA, TIRANTE, PASADOR Y TACO", "5"
+    Guardar "Plano5_Piezas_varias"
+End Sub
+
+' ---------- programa principal ----------
+Sub main()
+    Set swApp = Application.SldWorks
+    FRONTAL = Array("*Frontal", "*Front", "*Alzado")
+    SUPERIOR = Array("*Superior", "*Top", "*Planta")
+    IZQ = Array("*Izquierda", "*Left")
+    ISO = Array("*Isom" & ChrW(233) & "trica", "*Isometrica", "*Isometric")
+    FMT = Buscar("a3 - iso.slddrt")
+    BOMTPL = Buscar("bom-standard.sldbomtbt")
+    If FMT = "" Then informe = informe & "Aviso: no encontre el formato 'a3 - iso' (hoja sin cajetin)" & vbCrLf
+    Plano1
+    Plano2
+    Plano3
+    Plano4
+    Plano5
+    MsgBox "Planos creados." & vbCrLf & vbCrLf & informe, vbInformation, "Taburete"
+End Sub
