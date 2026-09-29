@@ -1,0 +1,75 @@
+' ==========================================================================
+'  Macro de corrección: asigna los materiales por configuración a las piezas
+'  de C:\Taburete\ (nombres en español o en inglés) y rehace el CSV de masas.
+' ==========================================================================
+Option Explicit
+Const CARPETA As String = "C:\Taburete\"
+Dim swApp As Object
+Dim Part As Object
+Dim informe As String
+
+Function PonerMaterial(cfg As String, candidatos) As String
+    ' prueba cada nombre en las bases de datos de SOLIDWORKS hasta que uno funcione
+    Dim bases, b, c, bd As String, asignado As String
+    bases = Array("SOLIDWORKS Materials", "Materiales de SOLIDWORKS", "SolidWorks Materials")
+    For Each c In candidatos
+        For Each b In bases
+            On Error Resume Next
+            Part.SetMaterialPropertyName2 cfg, CStr(b), CStr(c)
+            asignado = Part.GetMaterialPropertyName2(cfg, bd)
+            On Error GoTo 0
+            If LCase(asignado) = LCase(CStr(c)) Then PonerMaterial = asignado: Exit Function
+        Next b
+    Next c
+    PonerMaterial = ""
+End Function
+
+Sub Pieza(nombre As String, cantidad As Integer, mAc, mAl, mMa, ByRef csv As String)
+    Dim errs As Long, warns As Long, cfgs, mats, i As Integer, r As String, fila As String, mp As Object
+    Set Part = swApp.OpenDoc6(CARPETA & nombre & ".SLDPRT", 1, 1, "", errs, warns)
+    If Part Is Nothing Then informe = informe & "ERROR: no se pudo abrir " & nombre & vbCrLf: Exit Sub
+    cfgs = Array("ALT1_ACERO", "ALT2_ALUMINIO", "ALT3_MADERA")
+    mats = Array(mAc, mAl, mMa)
+    fila = nombre & ";" & cantidad
+    For i = 0 To 2
+        Part.ShowConfiguration2 cfgs(i)
+        r = PonerMaterial(CStr(cfgs(i)), mats(i))
+        If r = "" Then
+            informe = informe & "  Aviso: sin material en " & nombre & " / " & cfgs(i) & vbCrLf
+        End If
+        Part.EditRebuild3
+        Set mp = Part.Extension.CreateMassProperty
+        fila = fila & ";" & Format(mp.Mass * 1000, "0.0")
+    Next i
+    Part.ShowConfiguration2 "ALT2_ALUMINIO"
+    Part.Save3 1, errs, warns
+    swApp.CloseDoc Part.GetTitle
+    csv = csv & fila & vbCrLf
+    informe = informe & "OK  " & nombre & vbCrLf
+End Sub
+
+Sub main()
+    Set swApp = Application.SldWorks
+    Dim csv As String, acero, alu, haya, pp, caucho
+    acero = Array("Acero al carbono no aleado", "Plain Carbon Steel", "AISI 1020", "Acero AISI 1020")
+    alu = Array("6063-T5", "6063-T6", "6061-T6 (SS)", "Aleación 6061")
+    haya = Array("Haya", "Beech", "Madera de haya")
+    pp = Array("PP copolímero", "PP Copolymer", "PP Copolimero", "Polipropileno")
+    caucho = Array("Caucho", "Rubber", "Caucho natural")
+    csv = "Pieza;Cantidad;Masa ALT1_ACERO (g);Masa ALT2_ALUMINIO (g);Masa ALT3_MADERA (g)" & vbCrLf
+    Pieza "Larguero_delantero", 2, acero, alu, haya, csv
+    Pieza "Pata_trasera", 2, acero, alu, haya, csv
+    Pieza "Travesano_asidero", 1, acero, alu, haya, csv
+    Pieza "Travesano_trasero", 1, acero, alu, haya, csv
+    Pieza "Plataforma", 1, acero, pp, haya, csv
+    Pieza "Peldano", 1, acero, pp, haya, csv
+    Pieza "Biela_plataforma", 2, acero, alu, acero, csv
+    Pieza "Tirante_peldano", 2, acero, alu, acero, csv
+    Pieza "Pasador", 10, acero, acero, acero, csv
+    Pieza "Taco", 4, caucho, caucho, caucho, csv
+    Dim f As Integer: f = FreeFile
+    Open CARPETA & "masas_solidworks.csv" For Output As #f
+    Print #f, csv
+    Close #f
+    MsgBox "Materiales revisados." & vbCrLf & vbCrLf & informe, vbInformation, "Taburete"
+End Sub
