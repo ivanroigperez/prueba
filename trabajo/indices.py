@@ -52,7 +52,7 @@ def construir(pagsH,pagsI,pagsT):
         out=[]
         for i,((lvl,t),pg) in enumerate(zip(items,pags)):
             p=salto.insert_paragraph_before(); pf=p.paragraph_format
-            pf.left_indent=Cm(0 if lvl==1 else (0.6 if not titulo else 0)); pf.space_before=Pt(8 if lvl==1 else 0); pf.space_after=Pt(2)
+            pf.left_indent=Cm(0 if lvl==1 else (0.6 if not titulo else 0)); pf.space_before=Pt(5 if lvl==1 else 0); pf.space_after=Pt(1)
             pf.tab_stops.add_tab_stop(Cm(16),WD_TAB_ALIGNMENT.RIGHT,WD_TAB_LEADER.DOTS)
             if i==0:
                 fld(p,"begin"); r=OxmlElement("w:r"); it=OxmlElement("w:instrText"); it.set(qn("xml:space"),"preserve"); it.text=instr; r.append(it); p._p.append(r); fld(p,"separate")
