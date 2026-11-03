@@ -6,7 +6,7 @@ plt.rcParams.update({"font.family":"DejaVu Sans","font.size":9})
 INK="#2b2b2b"; RED="#c0392b"; BLUE="#1f6fb2"; GREEN="#3c8d2f"; GREY="#8a8a8a"; ORANGE="#d68910"; BROWN="#8d6e4a"
 
 # ---- FIG 5: precios de la competencia ----
-prod=[("IKEA BOLMEN\n(PP, 1 peldaño)",1.50,"Plástico"),("Altipesa aluminio\n2 peldaños",19.27,"Aluminio"),
+prod=[("IKEA BOLMEN\n(PP, 1 peldaño)",4.99,"Plástico"),("Altipesa aluminio\n2 peldaños",19.27,"Aluminio"),
 ("IKEA BEKVÄM\n(haya, no plegable)",24.99,"Madera"),("Hailo Safety\n4312-001 (acero)",52.39,"Acero"),
 ("Hailo K20\n4396-901 (acero)",58.87,"Acero"),("Hailo L90\n4442-701 (aluminio)",86.03,"Aluminio")]
 col={"Plástico":"#9b59b6","Aluminio":"#7f8c8d","Madera":BROWN,"Acero":BLUE}
@@ -16,13 +16,13 @@ ax.bar(x,[p[1] for p in prod],color=[col[p[2]] for p in prod],width=0.62)
 for xi,p in zip(x,prod): ax.text(xi,p[1]+1.5,f"{p[1]:.2f} €".replace(".",","),ha="center",fontsize=8.5,fontweight="bold")
 ax.axhspan(0,45,xmin=0,xmax=1,color=GREEN,alpha=0.06)
 ax.axhline(45,color=GREEN,lw=1.6,ls="--"); ax.text(0.7,46.5,"Precio objetivo ≤ 45 €",color=GREEN,ha="left",fontweight="bold",fontsize=9)
-ax.axhline(54.1,color=RED,lw=1,ls=":"); ax.text(-0.35,56,"Media plegables 150 kg ≈ 54 €",color=RED,fontsize=8)
+ax.axhline(54.1,color=RED,lw=1,ls=":"); ax.text(-0.35,56,"Media plegables 150 kg: 54 €",color=RED,fontsize=8)
 ax.set_xticks(x,[p[0] for p in prod],fontsize=7.8); ax.set_ylabel("Precio de venta (€, IVA incl.)"); ax.set_ylim(0,97)
 for s in ["top","right"]: ax.spines[s].set_visible(False)
 from matplotlib.patches import Patch
 ax.legend(handles=[Patch(color=c,label=k) for k,c in col.items()],frameon=False,loc="upper left",fontsize=8,ncol=4)
 ax.set_title("Precio de venta de taburetes-escalera del mercado español",fontsize=11,fontweight="bold",loc="left")
-fig.text(0.01,0.01,"Fuentes: IKEA, Obramat, ManoMano, comercialpazos.com, tuandco.com (consultado sept. 2026). Elaboración propia.",fontsize=6.8,color="#666")
+fig.text(0.01,0.01,"Fuentes: IKEA, Obramat, ManoMano, comercialpazos.com, tuandco.com (consultado sept. y nov. 2026). Elaboración propia.",fontsize=6.8,color="#666")
 plt.tight_layout(rect=(0,0.03,1,1)); plt.savefig("figura5_precios_mercado.png"); plt.close()
 
 # ---- FIG 6: rueda estratégica de ecodiseño (LiDS) ----
