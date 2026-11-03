@@ -36,18 +36,19 @@ P("Durante el trabajo he tenido que tomar muchas decisiones sin un enunciado ni 
 P("Impacto: Alto = podría cambiar una conclusión o costar bastante nota. Medio = discutible, pero defendible si lo explicas. Bajo = detalle.",i=True,c=GRIS,size=9.5,after=10)
 
 D=[
-("4","El ACV se tiene que hacer con Eco-it y los resultados están pendientes","Alto",
- "Rehacer el capítulo 4 en el formato de Eco-it: método, datos de entrada (Tabla 12), comentarios y conclusiones ya escritos, con los resultados y las capturas en amarillo.",
- "El profesor pide en el aula virtual «un pequeño ACV del producto usando el software Eco-it». Mi cálculo anterior con factores ICE no vale como resultado, porque no está hecho con Eco-it; lo he dejado solo en la guía para detectar errores.",
- "No sé qué método usaréis en Eco-it (huella de carbono o Eco-indicador 99), en qué fase se mete el transporte ni los nombres exactos de los materiales de su base de datos. Los comentarios del capítulo 4 dan por hecho que la producción es la fase dominante y que la madera es la de menor impacto; es casi seguro, pero hay que confirmarlo.",
- "En la práctica de Eco-it, siguiendo la Guía Eco-it. Después, rellena los huecos amarillos o pásame los resultados y lo completo yo."),
+("4","El ACV con Eco-it solo se ha hecho para la alternativa 2","Medio",
+ "Hacer el ACV en Eco-it solo de la alternativa elegida (aluminio y PP) y de su variante con aluminio reciclado. El capítulo 4 queda así: 4.1 selección frente al EDP (Tabla 12), 4.2 método y datos (Tabla 13), 4.3 resultados y 4.4 conclusiones.",
+ "El profesor pide «un pequeño ACV del producto usando el software Eco-it», en singular, y lo repite en el mismo mensaje. El acero y la madera ya quedan descartados por el peso (P5) antes del ACV.",
+ "Si el profesor esperaba comparar las tres alternativas, falta el ACV del acero y de la madera. Con los factores de Eco-it, el acero rondaría los 20 kg CO₂-eq (estimación mía, no calculada en Eco-it): con aluminio primario (35) la alternativa elegida sería la de más impacto, y con aluminio reciclado (10,5) pasa a ser mejor que el acero.",
+ "Pregúntale al profesor si basta con el producto. Si pide las tres, se hacen en Eco-it partiendo del archivo de la alternativa 2 (unos 10-15 minutos cada una) y vuelvo a meter los apartados. Si en la defensa te preguntan por qué no el acero, la respuesta es el peso (P5) y el dato del aluminio reciclado."),
+
 ("1.7","Qué entiende el profesor por «estructura»","Medio",
  "Añadir el apartado 1.7 con el árbol de estructura del producto: conjunto, subconjuntos, piezas y la función de cada parte.",
  "El mensaje del profesor incluye «estructura» en la fase inicial, y el índice de ejemplo habla de «estructura de descomposición del producto».",
  "Ya no tengo los PDF de los apuntes para comprobar la definición exacta. Puede referirse a la estructura funcional (cómo se relacionan las funciones) y no a la estructura física de piezas. Confianza: alrededor del 70 %.",
  "Mira en los apuntes de Metodologías cómo definen «estructura» en la etapa inicial. Si es la estructura funcional, avísame y lo adapto (el árbol de funciones del 1.4 ya cubre parte)."),
-("4.5","Decisión final: aluminio reciclado (antes era la madera)","Medio",
- "Aplicar primero un filtro de requisitos imprescindibles (Tabla 16). El acero y la madera no cumplen P5 y quedan descartados, así que se elige el aluminio reciclado.",
+("4.1 y 4.4","Decisión final: aluminio reciclado (antes era la madera)","Medio",
+ "Aplicar primero un filtro de requisitos imprescindibles (Tabla 12). El acero y la madera no cumplen P5 y quedan descartados, así que se elige el aluminio reciclado.",
  "Otra revisión detectó que la versión anterior elegía la madera, que pesa 3,96 kg, y que la matriz le daba un 4 en peso. Con un 1 en peso ganaba el aluminio. Ahora la conclusión coincide con el modelo, los planos y el capítulo 5.",
  "La madera queda descartada por un peso calculado con una sección simplificada. Puede que un diseño de madera bien hecho también cumpla, pero no está demostrado.",
  "Si te preguntan por qué no la madera: incumple un requisito imprescindible y su modelo no está verificado. Queda como línea futura."),
@@ -65,17 +66,17 @@ D=[
  "Mantener las técnicas de rediseño como capítulo 5, entre la evaluación y la realización.",
  "Son materia del curso (apuntes de Técnicas de rediseño) y el capítulo está completo.",
  "El mensaje del profesor enumera las fases inicial, de información, técnico-creativa, de evaluación y de realización; el rediseño no aparece. Puede valorarlo, ignorarlo o preferir un trabajo más corto.",
- "Si quieres quitarlo, se elimina el capítulo 5 entero y hay que cambiar tres frases que lo citan (en el 2.1, el 3.4 y el final del 4.5). Dímelo y lo hago."),
+ "Si quieres quitarlo, se elimina el capítulo 5 entero y hay que cambiar dos frases que lo citan (en el 2.1 y el 3.4). Dímelo y lo hago."),
 ("5.2","El AMFEC no calcula la criticidad (G × O)","Bajo",
  "Usar solo el IPR = O × G × D.",
  "Es lo único que definen los apuntes de Técnicas de rediseño; la palabra «criticidades» solo aparece en el nombre de la técnica.",
  "Otra revisión lo señaló como fallo. Según tus apuntes no lo es, pero algunos profesores lo piden.",
- "Si quieres cubrirte, añade una columna G × O a la Tabla 17. Son 8 multiplicaciones."),
-("4.1","Hipótesis del ACV","Medio",
- "600 km de transporte en camión, reciclaje del 90 % de los metales, cambio de tacos una vez en 10 años, incineración de plásticos y valorización energética de la madera.",
+ "Si quieres cubrirte, añade una columna G × O a la Tabla 15. Son 8 multiplicaciones."),
+("4.2","Hipótesis del ACV","Medio",
+ "600 km de transporte en camión, reciclaje del 90 % de los metales, cambio de tacos una vez en 10 años, incineración del polipropileno y del caucho.",
  "Son valores razonables y habituales en ACV simplificados, y se pueden meter tal cual en Eco-it.",
- "Ninguno está medido. Además, el ACV no incluye el embalaje, la pintura o el anodizado ni las mermas de fabricación (ya está dicho en el 4.1).",
- "Si en la práctica el profesor da otros escenarios (por ejemplo, otro porcentaje de reciclaje o un escenario de residuos urbanos de Eco-it), usa los suyos y cambia la frase del 4.1."),
+ "Ninguno está medido. Además, el ACV no incluye el embalaje, el anodizado ni las mermas de fabricación (ya está dicho en el 4.2).",
+ "Si en la práctica el profesor da otros escenarios (por ejemplo, otro porcentaje de reciclaje o un escenario de residuos urbanos de Eco-it), usa los suyos y cambia la frase del 4.2."),
 ("2.4 y normativa","No he tenido acceso al texto de la UNE-EN 14183","Medio",
  "Describir la norma a partir de fuentes secundarias (AFESPO, Test and Research Centre, fichas de fabricantes).",
  "La norma es de pago.",
@@ -153,6 +154,6 @@ for i,(ap,ti,imp,dec,porq,duda,comp) in enumerate(D,1):
         campo(P(after=3),et,txt)
     P("",after=4)
 d.add_heading("Consejo final para la defensa",level=1)
-P("La duda de impacto alto (el ACV con Eco-it) es la única que puede dejar incompleta una parte obligatoria: resuélvela en la práctica. Las de impacto medio son las que un profesor de Ingeniería Mecánica puede ver con más facilidad. No hace falta resolverlas todas; basta con que las conozcas y sepas explicar por qué se tomó esa decisión y cuál sería el siguiente paso. Decir «esto no está verificado y se comprobaría así» suele puntuar mejor que dar un dato que luego no sabes justificar.")
+P("Ya no queda ninguna duda de impacto alto. Las de impacto medio son las que un profesor de Ingeniería Mecánica puede ver con más facilidad. No hace falta resolverlas todas; basta con que las conozcas y sepas explicar por qué se tomó esa decisión y cuál sería el siguiente paso. Decir «esto no está verificado y se comprobaría así» suele puntuar mejor que dar un dato que luego no sabes justificar.")
 P("Recuerda también que todo el trabajo tiene que poder defenderlo quien lo firma. Repasa los cálculos del ACV, la cinemática del plegado y la matriz de decisión hasta que puedas explicarlos sin el documento delante.")
 d.save("Dudas_y_decisiones.docx"); print(len(D),"dudas")
