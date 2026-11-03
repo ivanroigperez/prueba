@@ -103,7 +103,7 @@ D=[
 ("3.2","Elección de parámetros TRIZ","Bajo",
  "Contradicciones 14/1, 33/27 y 13/7.",
  "Son las que mejor describen el problema.",
- "Comprobadas el 3/11/2026 con la matriz clásica de Altshuller (hoja de cálculo de J. Hipple): 14/1 (1, 8, 40, 15) y 33/27 (17, 27, 8, 40) coinciden. La 13/7 decía 28, 10, 1 y 39 y es 28, 10, 19 y 39; ya está corregida. El parámetro 13 de TRIZ es la estabilidad de la composición del objeto, y aquí se usa como estabilidad frente al vuelco, que es la lectura habitual en clase.",
+ "Comprobadas el 3/11/2026 con la matriz clásica de Altshuller (hoja de cálculo de J. Hipple): 14/1 (1, 8, 40, 15) y 33/27 (17, 27, 8, 40) coinciden. La 13/7 decía 28, 10, 1 y 39 y es 28, 10, 19 y 39; ya está corregida. El parámetro 13 de TRIZ es la estabilidad de la composición del objeto, y aquí se usa como estabilidad frente al vuelco; un profesor estricto lo podría señalar.",
  "Si vuestra matriz de clase es otra versión, compara solo esas tres celdas."),
 
 ("5","QFD y AMFEC sin datos de clientes ni de ensayos","Bajo",
