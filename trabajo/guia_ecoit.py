@@ -125,9 +125,9 @@ tabla([("Resultado de Eco-it","Dónde va en el capítulo 4"),
        ("Valores por fase de la alternativa 1","Tabla 13 y texto del apartado 4.2"),
        ("Valores por fase de la alternativa 2 (primario y reciclado)","Tabla 14, texto del 4.3 y segunda conclusión del 4.5"),
        ("Valores por fase de la alternativa 3","Tabla 15 y texto del 4.4"),
-       ("Captura de resultados de cada alternativa","Ilustraciones 18, 19 y 20 (huecos amarillos)"),
+       ("Captura de resultados de cada alternativa","Ilustraciones 18, 21 y 22 (huecos amarillos)"),
        ("Totales de las tres alternativas","Fila «Impacto del ciclo de vida» de la Tabla 16"),
-       ("Gráfico comparativo por fases","Ilustración 21 (si me pasas los valores, lo hago yo)")],[8.3,8.3])
+       ("Gráfico comparativo por fases","Ilustración 23 (si me pasas los valores, lo hago yo)")],[8.3,8.3])
 P("Al terminar, borra la nota amarilla del principio del capítulo 4 y comprueba que no queda ningún hueco amarillo (Ctrl+B y busca «[»).",i=True)
 
 d.add_heading("7. Comprobación rápida de errores",level=1)
