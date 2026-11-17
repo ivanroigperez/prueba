@@ -78,6 +78,7 @@ for clave, texto in DATOS.items():
     for e in vinetas + [rotulo]: e.getparent().remove(e)
 for pie in ("Ilustración 8. Figuras 1 y 2 de la patente US 6 454 050", "Ilustración 9. Figuras 1 y 2 de la patente US 6 966 404"):
     borrar_pie_y_objeto(pie)
+cambiar("Dispositivo que mantiene desplegado un taburete plegable", "el taburete se bloquea abierto.", "el taburete se bloquea abierto (Ilustración 7).")
 for p in [p for p in paras() if p.text in ("¿Afecta al producto?", "¿Es patentable el producto?")]:
     sig = Paragraph(p._p.getnext(), p._parent)
     if p.text.startswith("¿Afecta"):
@@ -141,6 +142,16 @@ for p in paras():
     if n != t:
         r = [r for r in p.runs if t.split(". ")[0] in r.text]
         assert r, t; r[0].text = r[0].text.replace(t.split(" ")[0], n.split(" ")[0], 1)
+
+# ---- 5b. referencias a apartados dentro de las tablas (EDP: las patentes pasan del 2.5 al 2.4) ----
+n = 0
+for tb in d.tables:
+    for row in tb.rows:
+        for c in row.cells:
+            for p in c.paragraphs:
+                for r in p.runs:
+                    if "(ver apartado 2.5)" in r.text: r.text = r.text.replace("(ver apartado 2.5)", "(ver apartado 2.4)"); n += 1
+assert n >= 1, "no se encontró la referencia del EDP"
 
 # ---- 6. bibliografía: fuera la ANSI, que solo citaba el apartado de normas de otros países ----
 bib = buscar("BIBLIOGRAFÍA"); el = bib._p.getnext(); k = 0
